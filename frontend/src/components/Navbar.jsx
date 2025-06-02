@@ -10,12 +10,13 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "./Auth/useAuth";
 import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
+const navigationPages = [
+  { name: "Home", href: "/", current: true },
+  { name: "Contact", href: "/contact", current: false },
+  { name: "Projects", href: "/projects", current: false },
+  { name: "Skills", href: "/skills", current: false },
 ];
 
 function classNames(...classes) {
@@ -25,7 +26,15 @@ function classNames(...classes) {
 export default function Navbar() {
   const { isAuthenticated, user, dispatch } = useAuth();
   const navigate = useNavigate();
-
+  const [navigation, setNavigation] = useState(navigationPages);
+  useEffect(() => {
+    setNavigation((prev) =>
+      prev.map((item) => ({
+        ...item,
+        current: window.location.pathname === item.href,
+      }))
+    );
+  }, [window.location.pathname]);
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -64,7 +73,7 @@ export default function Navbar() {
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     aria-current={item.current ? "page" : undefined}
                     className={classNames(
                       item.current
@@ -82,7 +91,7 @@ export default function Navbar() {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {/* Profile dropdown */}
             {isAuthenticated ? (
-              <div>
+              <>
                 <button
                   type="button"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
@@ -98,7 +107,8 @@ export default function Navbar() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         alt=""
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        // src="https://cdn.vectorstock.com/i/2000v/66/13default-avatar-profile-icon-social-media-user-vector-49816613.avif"
+                        src={`${process.env.PUBLIC_URL}/images/avatar.png`}
                         className="size-8 rounded-full"
                       />
                     </MenuButton>
@@ -109,7 +119,7 @@ export default function Navbar() {
                   >
                     <MenuItem>
                       <Link
-                        href="#"
+                        to="/profile"
                         className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                       >
                         Your Profile
@@ -117,7 +127,7 @@ export default function Navbar() {
                     </MenuItem>
                     <MenuItem>
                       <Link
-                        href="#"
+                        to="/settings"
                         className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                       >
                         Settings
@@ -125,7 +135,8 @@ export default function Navbar() {
                     </MenuItem>
                     <MenuItem>
                       <Link
-                        href="#"
+                        onClick={handleLogout}
+                        to="/logout"
                         className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                       >
                         Sign out
@@ -133,7 +144,7 @@ export default function Navbar() {
                     </MenuItem>
                   </MenuItems>
                 </Menu>
-              </div>
+              </>
             ) : (
               <div className="flex items-center space-x-4">
                 <Link to="/login" className="text-white">
