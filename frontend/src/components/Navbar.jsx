@@ -36,10 +36,12 @@ export default function Navbar() {
     );
   }, [window.location.pathname]);
   const handleLogout = () => {
+    // Perform logout logic here, e.g., API call to invalidate token
+    // Clear local storage and update auth context
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     dispatch({ type: "LOGOUT" });
-    navigate("/login");
+    navigate("/");
   };
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -134,13 +136,12 @@ export default function Navbar() {
                       </Link>
                     </MenuItem>
                     <MenuItem>
-                      <Link
-                        onClick={handleLogout}
-                        to="/logout"
-                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                      <button
+                        onClick={() => handleLogout()}
+                        className="block w-full text-left cursor-pointer px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                       >
                         Sign out
-                      </Link>
+                      </button>
                     </MenuItem>
                   </MenuItems>
                 </Menu>

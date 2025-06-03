@@ -40,14 +40,6 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<ProfileEdit user={user} />} />
             <Route
-              path="/logout"
-              element={() => {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                window.location.href = "/login";
-              }}
-            />
-            <Route
               path="/admin"
               element={
                 <PrivateRoute>
